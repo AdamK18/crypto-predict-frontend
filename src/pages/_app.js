@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Header from '@components/header';
 import axios from 'axios';
 import { sortByTimeStamp } from '@utils';
+import '@styles/index.css';
 
 const App = () => {
   useEffect(() => {
@@ -11,7 +12,7 @@ const App = () => {
       const sortedData = sortByTimeStamp(response.data);
       console.log(sortedData);
     };
-    getData();
+    //getData();
   }, []);
 
   return (

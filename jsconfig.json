@@ -5,6 +5,7 @@
       "@api": ["pages/api"],
       "@api/*": ["pages/api/*"],
       "@utils": ["shared/utils"],
+      "@styles/*": ["shared/styles/*"],
       "@components/*": ["shared/components/*"]
     }
   }
