@@ -2,12 +2,14 @@ import React, { useEffect } from 'react';
 import Link from 'next/link';
 import Header from '@components/header';
 import axios from 'axios';
+import { sortByTimeStamp } from '@utils';
 
-const HomePage = () => {
+const App = () => {
   useEffect(() => {
     const getData = async () => {
-      const data = await axios.get('/api/trades');
-      console.log(data);
+      const response = await axios.get('/api/trades');
+      const sortedData = sortByTimeStamp(response.data);
+      console.log(sortedData);
     };
     getData();
   }, []);
@@ -22,4 +24,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default App;
