@@ -1,5 +1,5 @@
 .header {
-  height: 80px;
+  flex: '0 1 80px';
   padding: 1rem 3rem;
   box-shadow: rgb(0 0 0 / 40%) 0px 0px 10px;
   display: flex;

@@ -1,7 +1,7 @@
-import { getDocs, collectionGroup, collection } from 'firebase/firestore';
+import { getDocs, collection } from 'firebase/firestore';
 import { getDB } from '@api';
 
-const tradeHandler = async (req, res) => {
+const botHandler = async (req, res) => {
   const db = getDB();
   if (!db) {
     res.status(500).json('Not Authorized');
@@ -11,4 +11,4 @@ const tradeHandler = async (req, res) => {
   res.status(200).json(tradesList);
 };
 
-export default tradeHandler;
+export default botHandler;

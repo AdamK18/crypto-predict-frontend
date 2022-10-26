@@ -1,4 +1,6 @@
-const getMetaData = async () => {
+import axios from 'axios';
+
+export const getBots = async () => {
   const response = await axios.get('/api/trades');
   const botIds = response.data.map((bot) => {
     return bot.bot_id;
@@ -6,7 +8,8 @@ const getMetaData = async () => {
   return botIds;
 };
 
-const getBotData = async (botId) => {
+export const getTrades = async ({ queryKey }) => {
+  const [_, botId] = queryKey;
   const response = await axios.get(`/api/trades/${botId}`);
   return response.data;
 };

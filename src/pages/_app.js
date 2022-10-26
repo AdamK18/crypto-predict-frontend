@@ -1,28 +1,18 @@
-import React, { useEffect } from 'react';
-import Link from 'next/link';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import Header from '@components/header';
-import axios from 'axios';
-import { sortByTimeStamp } from '@utils';
 import '@styles/index.css';
 
-const App = () => {
-  useEffect(() => {
-    const getData = async () => {
-      const response = await axios.get('/api/trades');
-      const sortedData = sortByTimeStamp(response.data);
-      console.log(sortedData);
-    };
-    //getData();
-  }, []);
+const MyApp = ({ Component, pageProps }) => {
+  const queryClient = new QueryClient();
 
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <Header />
-      <div>
-        This is the initial project setup. Go to <Link href='/api/trades'>Trades</Link> to see some data.
-      </div>
-    </>
+      <main className='mainContent'>
+        <Component {...pageProps} />
+      </main>
+    </QueryClientProvider>
   );
 };
 
-export default App;
+export default MyApp;

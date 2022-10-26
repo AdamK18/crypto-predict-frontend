@@ -25,3 +25,20 @@ h5,
 h6 {
   font-family: 'Lato', sans-serif;
 }
+
+html,
+body,
+#__next,
+.mainContent {
+  overflow: auto;
+}
+
+#__next {
+  display: flex;
+  flex-direction: column;
+}
+
+.mainContent {
+  padding: 1rem;
+  flex: 1 1 auto;
+}

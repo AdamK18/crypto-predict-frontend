@@ -1,9 +1,10 @@
-import { collection, getDocs } from 'firebase/firestore/lite';
+import { collection, getDocs } from 'firebase/firestore';
 import { getDB } from '@api';
 
 const tradeHandler = async (req, res) => {
   const { id } = req.query;
   const db = getDB();
+  console.log(db);
   if (!db) {
     res.status(500).json('Not Authorized');
   }
