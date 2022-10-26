@@ -1,0 +1,18 @@
+.header {
+  flex: '0 1 80px';
+  padding: 1rem 3rem;
+  box-shadow: rgb(0 0 0 / 40%) 0px 0px 10px;
+  display: flex;
+  align-items: center;
+}
+
+.h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  flex: 1 1 auto;
+}
+
+.nav {
+  height: fit-content;
+  flex: 5 1 auto;
+}
