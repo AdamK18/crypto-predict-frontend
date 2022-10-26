@@ -7,8 +7,8 @@ const tradeHandler = async (req, res) => {
     res.status(500).json('Not Authorized');
   }
   const tradesSnapshot = await getDocs(collection(db, 'trades'));
-  /* const tradesList = tradesSnapshot.docs.map((doc) => doc.data());
-  res.status(200).json(tradesSnapshot); */
+  const tradesList = tradesSnapshot.docs.map((doc) => doc.data());
+  res.status(200).json(tradesList);
 };
 
 export default tradeHandler;
