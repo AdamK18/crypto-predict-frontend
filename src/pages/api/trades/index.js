@@ -6,7 +6,7 @@ const botHandler = async (req, res) => {
   if (!db) {
     res.status(500).json('Not Authorized');
   }
-  const tradesSnapshot = await getDocs(collection(db, 'trades'));
+  const tradesSnapshot = await getDocs(collection(db, 'bots'));
   const tradesList = tradesSnapshot.docs.map((doc) => doc.data());
   res.status(200).json(tradesList);
 };

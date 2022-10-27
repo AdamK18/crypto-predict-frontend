@@ -1,15 +1,5 @@
 import axios from 'axios';
 
-export const getBots = async () => {
-  const response = await axios.get('/api/trades');
-  const botIds = response.data.map((bot) => {
-    return bot.bot_id;
-  });
-  return botIds;
-};
+export const getBots = () => axios.get('/api/trades');
 
-export const getTrades = async ({ queryKey }) => {
-  const [_, botId] = queryKey;
-  const response = await axios.get(`/api/trades/${botId}`);
-  return response.data;
-};
+export const getTrades = (botId) => axios.get(`/api/trades/${botId}`);
