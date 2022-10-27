@@ -1,26 +1,53 @@
-import { useQuery } from 'react-query';
+import { useState, useEffect } from 'react';
 import { getBots } from 'api/getTradeData';
-import { Grid } from '@mui/material';
-import ChartItem from 'components/ChartItem';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
+import Link from 'next/link';
 
 const HomePage = () => {
-  /* const { data, status } = useQuery('bots', getBots);
+  const [bots, setBots] = useState([]);
 
-  if (status === 'loading') {
-    return <p>Loading...</p>;
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getBots();
+      setBots(response.data);
+    };
 
-  if (status === 'error') {
-    return <p>Error loading data</p>;
-  }
+    fetchData();
+  }, []);
 
   return (
-    <Grid container spacing={5} justifyContent={'center'} alignItems={'center'}>
-      {data.map((botId) => {
-        return <ChartItem key={botId} botId={botId} />;
-      })}
-    </Grid>
-  ); */
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label='simple table'>
+        <TableHead>
+          <TableRow>
+            <TableCell>Bot ID</TableCell>
+            <TableCell align='right'>Window size</TableCell>
+            <TableCell align='right'>Lookup step</TableCell>
+            <TableCell></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {bots.map((bot) => {
+            const { bot_id, window_size, lookup_step } = bot;
+            return (
+              <TableRow key={bot_id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                <TableCell component='th' scope='row'>
+                  {bot_id}
+                </TableCell>
+                <TableCell align='right'>{window_size}</TableCell>
+                <TableCell align='right'>{lookup_step}</TableCell>
+                <TableCell align='right'>
+                  <Link href={`/bot/${bot_id}`} passHref>
+                    <Button variant='outlined'>See data</Button>
+                  </Link>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
 };
 
 export default HomePage;
