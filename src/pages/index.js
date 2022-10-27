@@ -4,7 +4,7 @@ import { Grid } from '@mui/material';
 import ChartItem from 'components/ChartItem';
 
 const HomePage = () => {
-  const { data, status } = useQuery('bots', getBots);
+  /* const { data, status } = useQuery('bots', getBots);
 
   if (status === 'loading') {
     return <p>Loading...</p>;
@@ -20,7 +20,7 @@ const HomePage = () => {
         return <ChartItem key={botId} botId={botId} />;
       })}
     </Grid>
-  );
+  ); */
 };
 
 export default HomePage;
