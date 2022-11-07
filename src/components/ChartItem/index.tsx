@@ -45,8 +45,19 @@ const ChartItem = ({ botId }) => {
           <Line type='monotone' dataKey='price' stroke='#8884d8' />
           <CartesianGrid stroke='#ccc' strokeDasharray='5 5' />
           <XAxis dataKey='timestamp' tickFormatter={(time) => formatEpoch(time)} />
-          <YAxis type='number' domain={[minY, maxY]} tickFormatter={(value) => parseFloat(Number(value).toFixed(2))} />
-          <Tooltip labelFormatter={(value) => formatEpoch(value)} />
+          <YAxis
+            type='number'
+            domain={[minY, maxY]}
+            tickFormatter={(value) => parseFloat(Number(value).toFixed(2)).toString()}
+          />
+          <Tooltip
+            labelFormatter={(value) => formatEpoch(value)}
+            content={({ payload }) => {
+              if (payload.length === 0) return <></>;
+              const value = payload[0].payload;
+              return <p>asd</p>;
+            }}
+          />
         </LineChart>
       </ResponsiveContainer>
     </Box>
