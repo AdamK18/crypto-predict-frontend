@@ -1,5 +1,5 @@
 import React from 'react';
-import ChartItem from '@components/ChartItem';
+import { ChartItem } from '@components/ChartItem';
 import { useRouter } from 'next/router';
 
 const Bot = () => {

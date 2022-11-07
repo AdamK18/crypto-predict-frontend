@@ -4,15 +4,7 @@ import { getTrades } from 'api/getTradeData';
 import { LineChart, XAxis, YAxis, Tooltip, CartesianGrid, Line, ResponsiveContainer } from 'recharts';
 import { sortByTimeStamp } from '@utils';
 import moment from 'moment/moment';
-
-const chartItemStyles = {
-  width: '100%',
-  height: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-  flexDirection: 'column',
-  alignItems: 'center',
-};
+import styles from './chartItem.module.scss';
 
 const ChartItem = ({ botId }) => {
   const [data, setData] = useState([]);
@@ -38,7 +30,7 @@ const ChartItem = ({ botId }) => {
   const maxY = Math.max(...yValues) * 1.1;
 
   return (
-    <Box sx={chartItemStyles}>
+    <Box className={styles.container}>
       <Typography>{botId}</Typography>
       <ResponsiveContainer width='100%' height='100%'>
         <LineChart data={formattedData} margin={{ top: 5, right: 20, bottom: 5, left: 20 }}>
