@@ -1,4 +1,4 @@
-.header {
+.container {
   flex: 0 1 80px;
   padding: 1rem 3rem;
   box-shadow: rgb(0 0 0 / 40%) 0px 0px 10px;
@@ -15,4 +15,10 @@
 .nav {
   height: fit-content;
   flex: 5 1 auto;
+  display: flex;
+
+  &__item {
+    width: fit-content;
+    margin-right: 1rem;
+  }
 }
