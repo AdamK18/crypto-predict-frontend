@@ -1,5 +1,5 @@
 import { collection, getDocs } from 'firebase/firestore';
-import { getDB } from '@api';
+import { getDB } from 'pages/api';
 
 const tradeHandler = async (req, res) => {
   const { id } = req.query;

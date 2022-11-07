@@ -4,7 +4,7 @@ import { Box, Typography } from '@mui/material';
 import { getTrades } from 'api/getTradeData';
 import { LineChart, XAxis, YAxis, Tooltip, CartesianGrid, Line, ResponsiveContainer } from 'recharts';
 import { DefaultTooltipContent } from 'recharts/lib/component/DefaultTooltipContent';
-import { sortByTimeStamp } from '@utils';
+import { sortByTimeStamp } from 'shared/utils';
 import moment from 'moment/moment';
 import styles from './chartItem.module.scss';
 

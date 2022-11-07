@@ -1,5 +1,5 @@
 import { getDocs, collection } from 'firebase/firestore';
-import { getDB } from '@api';
+import { getDB } from 'pages/api';
 
 const botHandler = async (req, res) => {
   const db = getDB();

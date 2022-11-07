@@ -1,14 +1,10 @@
 import React from 'react';
-import { ChartItem } from '@components/ChartItem';
-import { useRouter } from 'next/router';
+import { ChartItem } from 'components/ChartItem';
 
 const Bot = () => {
-  const router = useRouter();
-  const { id } = router.query;
-
   return (
     <>
-      <ChartItem botId={id} />
+      <ChartItem />
     </>
   );
 };
