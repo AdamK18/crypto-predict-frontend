@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { Typography, Box, Button, CircularProgress } from '@mui/material';
 import { TradeHistoryChart } from 'components/TradeHistoryChart';
 import { PerformanceChart } from 'components/PerformanceChart';
-import { getTrades } from 'api/getTradeData';
+import { getBotData } from 'api/botData';
 import { useQuery } from 'react-query';
 import styles from './botStyles.module.scss';
 
@@ -16,7 +16,7 @@ const Bot = () => {
   const [acvtiveChart, setAcvtiveChart] = useState<charts>(charts.TRADE_HISTORY);
   const router = useRouter();
   const { id } = router.query;
-  const { isIdle, data, isLoading } = useQuery(id, () => getTrades(id));
+  const { isIdle, data, isLoading } = useQuery(id, () => getBotData(id));
 
   if (isLoading || isIdle || data?.data.length === 0) {
     return <CircularProgress className='spinner' />;

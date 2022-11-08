@@ -11,7 +11,7 @@ const Header = () => {
           <Link href={'/'}>Home</Link>
         </div>
         <div className={styles.nav__item}>
-          <Link href={'/api/trades'}>Bots data</Link>
+          <Link href={'/api/bots'}>Bots data</Link>
         </div>
       </nav>
     </header>

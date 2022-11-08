@@ -1,4 +1,4 @@
-import { getBots } from 'api/getTradeData';
+import { getBots } from 'api/botData';
 import { TableRow, Paper, Button, CircularProgress } from '@mui/material';
 import { Table, TableBody, TableCell, TableContainer, TableHead } from '@mui/material';
 import { useQuery } from 'react-query';
