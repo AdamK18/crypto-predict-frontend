@@ -1,19 +1,17 @@
-import { useState, useEffect } from 'react';
 import { getBots } from 'api/getTradeData';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
+import { TableRow, Paper, Button, CircularProgress } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead } from '@mui/material';
+import { useQuery } from 'react-query';
 import Link from 'next/link';
 
 const HomePage = () => {
-  const [bots, setBots] = useState([]);
+  const { isIdle, data, isLoading } = useQuery('bots', () => getBots());
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await getBots();
-      setBots(response.data);
-    };
+  if (isLoading || isIdle || data?.data.length === 0) {
+    return <CircularProgress className='spinner' />;
+  }
 
-    fetchData();
-  }, []);
+  const bots = data.data;
 
   return (
     <TableContainer component={Paper}>
