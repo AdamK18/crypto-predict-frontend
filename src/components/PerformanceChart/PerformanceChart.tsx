@@ -15,8 +15,8 @@ const getDot = ({ cx, cy, payload }) => {
 };
 
 const PerformanceChart = ({ data }) => {
-  const getDate = (time) => moment(time).format('YYYY.MM.DD hh:mm:ss');
-  const getTime = (time) => moment(time).format('hh:mm');
+  const getDate = (time) => moment(time).format('YYYY.MM.DD HH:mm:ss');
+  const getTime = (time) => moment(time).format('HH:mm');
   const formattedData = sortByTimeStamp(data);
 
   const yValues = data?.map((val) => val.price);

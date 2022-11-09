@@ -1,5 +1,6 @@
 import axios from 'axios';
 
-export const getBots = () => axios.get('/api/bots');
+export const getBots = (limit?: number, orderBy?: string) => axios.get('/api/bots', { params: { limit, orderBy } });
 
-export const getBotData = (botId) => axios.get(`/api/bots/${botId}`);
+export const getBotData = (botId, limit?: number, orderBy?: string) =>
+  axios.get(`/api/bots/${botId}`, { params: { limit, orderBy } });
