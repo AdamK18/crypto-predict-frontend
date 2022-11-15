@@ -1,14 +1,20 @@
-import { getBots } from 'api/getTradeData';
-import { TableRow, Paper, Button, CircularProgress } from '@mui/material';
+import { getBots } from 'api/botData';
+import { TableRow, Paper, Button, CircularProgress, Typography } from '@mui/material';
 import { Table, TableBody, TableCell, TableContainer, TableHead } from '@mui/material';
 import { useQuery } from 'react-query';
 import Link from 'next/link';
 
-const HomePage = () => {
-  const { isIdle, data, isLoading } = useQuery('bots', () => getBots());
+const limit = process.env.NODE_ENV === 'development' ? 1 : -1;
 
-  if (isLoading || isIdle || data?.data.length === 0) {
+const HomePage = () => {
+  const { isIdle, data, isLoading } = useQuery('bots', () => getBots(limit));
+
+  if (isLoading || isIdle) {
     return <CircularProgress className='spinner' />;
+  }
+
+  if (!data || !data.data) {
+    return <Typography>No data</Typography>;
   }
 
   const bots = data.data;

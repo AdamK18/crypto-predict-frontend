@@ -18,6 +18,7 @@ const MyApp = ({ Component, pageProps }) => {
       queries: {
         refetchOnMount: process.env.NODE_ENV === 'development' ? false : 'always',
         keepPreviousData: process.env.NODE_ENV === 'development',
+        refetchOnWindowFocus: false,
       },
     },
   });
