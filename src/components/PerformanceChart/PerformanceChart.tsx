@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
-import { LineChart, XAxis, YAxis, Tooltip, CartesianGrid, Line, ResponsiveContainer } from 'recharts';
+import { LineChart, XAxis, YAxis, Tooltip, CartesianGrid, Line, ResponsiveContainer, Label } from 'recharts';
 import { DefaultTooltipContent } from 'recharts/lib/component/DefaultTooltipContent';
 import { changeDataToPerformanceChartData } from 'shared/utils';
 import moment from 'moment/moment';
@@ -26,28 +26,53 @@ const PerformanceChart = ({ data, setProfit }) => {
     setProfit(changedData[changedData.length - 1].profit);
   }, [data]);
 
-  const yValues = chartData.map((val) => val.profit);
-  const maxY = Math.max(...yValues);
-  const minY = Math.min(...yValues);
+  const profits = chartData.map((val) => val.profit);
+  const profitMax = Math.max(...profits);
+  const profitMin = Math.min(...profits);
+  const prices = chartData.map((val) => val.price);
+  const priceMax = Math.max(...prices);
+  const priceMin = Math.min(...prices);
 
   return (
     <Box className={styles.container}>
       <ResponsiveContainer id='chart_container' width='100%' height='100%'>
-        <LineChart id='chart' data={chartData} margin={{ top: 10, right: 18, bottom: 5, left: 0 }}>
+        <LineChart id='chart' data={chartData} margin={{ top: 10, right: 30, bottom: 10, left: 20 }}>
           <Line
+            yAxisId='price'
+            type='monotone'
+            dataKey='price'
+            stroke='#8884d8'
+            dot={(props) => null}
+            activeDot={(props) => null}
+          />
+          <Line
+            yAxisId='profit'
             type='monotone'
             dataKey='profit'
-            stroke='#8884d8'
+            stroke='#222222'
             dot={(props) => getDot(props)}
             activeDot={(props) => getDot(props)}
           />
           <CartesianGrid stroke='#ccc' strokeDasharray='5 5' />
-          <XAxis dataKey='timestamp' tickFormatter={(time) => getTime(time)} />
+          <XAxis dataKey='timestamp' tickFormatter={(time) => getTime(time)} tickMargin={15} />
           <YAxis
+            domain={[profitMin, profitMax]}
+            yAxisId='profit'
+            orientation='right'
             type='number'
-            domain={[minY, maxY]}
-            tickFormatter={(value) => parseFloat(Number(value).toFixed(4)).toString()}
-          />
+            tickFormatter={(value) => parseFloat(Number(value).toFixed(3)).toString()}
+            tickMargin={10}
+          >
+            <Label value={'Profit ($)'} angle={-90} position='right' fill='#222222' fontSize={20} offset={20} dy={40} />
+          </YAxis>
+          <YAxis
+            domain={[priceMin, priceMax]}
+            yAxisId='price'
+            tickFormatter={(value) => parseFloat(Number(value).toFixed(0)).toString()}
+            tickMargin={10}
+          >
+            <Label value={'Price (₿)'} angle={-90} position='left' fill='#8884d8' fontSize={20} offset={20} dy={-40} />
+          </YAxis>
           <Tooltip
             labelFormatter={(value) => getDate(value)}
             content={(props) => {
@@ -61,8 +86,8 @@ const PerformanceChart = ({ data, setProfit }) => {
                   name: 'Date',
                   value: getDate(values.timestamp),
                 },
-                { name: 'Price', value: values.price },
                 { name: 'Order Side', value: values.order_side },
+                { name: 'Price', value: values.price },
                 { name: 'Profit', value: values.profit },
               ];
               // we render the default, but with our overridden payload
