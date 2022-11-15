@@ -27,7 +27,7 @@ const PerformanceChart = ({ data, setProfit }) => {
   }, [data]);
 
   const yValues = chartData.map((val) => val.profit);
-  const maxY = Math.max(...yValues) * 3;
+  const maxY = Math.max(...yValues);
   const minY = Math.min(...yValues);
 
   return (
