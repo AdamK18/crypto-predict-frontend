@@ -7,7 +7,7 @@ import { getBotData } from 'api/botData';
 import { useQuery } from 'react-query';
 import styles from './botStyles.module.scss';
 
-const limit = process.env.NODE_ENV === 'development' ? 50 : -1;
+const limit = process.env.NODE_ENV === 'development' ? 50 : 50;
 
 enum charts {
   TRADE_HISTORY = 'TRADE_HISTORY',
