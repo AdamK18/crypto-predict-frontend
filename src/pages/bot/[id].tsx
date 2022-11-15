@@ -20,10 +20,11 @@ enum Order {
 }
 
 const Bot = () => {
-  const [activeChart, setActiveChart] = useState<charts>(charts.TRADE_HISTORY);
+  const [activeChart, setActiveChart] = useState<charts>(charts.PERFORMANCE);
+  const [profit, setProfit] = useState(0);
   const router = useRouter();
   const { id } = router.query;
-  const { isIdle, data, isLoading } = useQuery(id, () => getBotData(id, limit, Order.ASCENDING));
+  const { isIdle, data, isLoading } = useQuery(id, () => getBotData(id, limit));
 
   if (isLoading || isIdle) {
     return <CircularProgress className='spinner' />;
@@ -41,7 +42,7 @@ const Bot = () => {
       case charts.TRADE_HISTORY:
         return <TradeHistoryChart data={chartData} />;
       case charts.PERFORMANCE:
-        return <PerformanceChart data={chartData} />;
+        return <PerformanceChart data={chartData} setProfit={setProfit} />;
     }
   };
 
@@ -49,14 +50,14 @@ const Bot = () => {
     <Box className={styles.container}>
       <Box className={styles.subHeader}>
         <Typography className={styles.subHeader__title} variant='h6'>
-          {id}
+          {id}: <span style={{ color: profit > 0 ? 'green' : 'red' }}>{profit}</span>
         </Typography>
         <Box className={styles.subHeader__selectors}>
-          <Button variant={getButtonVariant(charts.TRADE_HISTORY)} onClick={() => setActiveChart(charts.TRADE_HISTORY)}>
-            Trade History
-          </Button>
           <Button variant={getButtonVariant(charts.PERFORMANCE)} onClick={() => setActiveChart(charts.PERFORMANCE)}>
             Performance
+          </Button>
+          <Button variant={getButtonVariant(charts.TRADE_HISTORY)} onClick={() => setActiveChart(charts.TRADE_HISTORY)}>
+            Trade History
           </Button>
         </Box>
       </Box>

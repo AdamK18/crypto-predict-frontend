@@ -4,10 +4,10 @@ import { DefaultTooltipContent } from 'recharts/lib/component/DefaultTooltipCont
 import moment from 'moment/moment';
 import styles from './tradeHistoryChart.module.scss';
 
-const getDot = ({ cx, cy, payload }) => {
+const getDot = ({ key, cx, cy, payload }) => {
   const color = payload.order_side === 'SELL' ? 'red' : 'green';
   return (
-    <svg x={cx - 4} y={cy - 4} width={75} height={75} fill='red' viewBox='0 0 1024 1024'>
+    <svg key={key} x={cx - 4} y={cy - 4} width={75} height={75} fill='red' viewBox='0 0 1024 1024'>
       <circle cx='50' cy='50' r='40' stroke='black' strokeWidth='3' fill={color} />
     </svg>
   );
