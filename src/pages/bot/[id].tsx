@@ -7,7 +7,7 @@ import { getBotData } from 'api/botData';
 import { useQuery } from 'react-query';
 import styles from './botStyles.module.scss';
 
-const limit = process.env.NODE_ENV === 'development' ? 50 : 50;
+const limit = 50;
 
 enum charts {
   TRADE_HISTORY = 'TRADE_HISTORY',
@@ -24,7 +24,7 @@ const Bot = () => {
   const [profit, setProfit] = useState(0);
   const router = useRouter();
   const { id } = router.query;
-  const { isIdle, data, isLoading } = useQuery(id, () => getBotData(id, limit));
+  const { isIdle, data, isLoading } = useQuery(id, () => getBotData(id, limit, Order.DESCENDING));
 
   if (isLoading || isIdle) {
     return <CircularProgress className='spinner' />;
