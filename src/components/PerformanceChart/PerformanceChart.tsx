@@ -42,16 +42,16 @@ const PerformanceChart = ({ data, setProfit }) => {
             type='monotone'
             dataKey='price'
             stroke='#8884d8'
-            dot={(props) => null}
-            activeDot={(props) => null}
+            dot={(props) => getDot(props)}
+            activeDot={(props) => getDot(props)}
           />
           <Line
             yAxisId='profit'
             type='monotone'
             dataKey='profit'
             stroke='#222222'
-            dot={(props) => getDot(props)}
-            activeDot={(props) => getDot(props)}
+            dot={(props) => null}
+            activeDot={(props) => null}
           />
           <CartesianGrid stroke='#ccc' strokeDasharray='5 5' />
           <XAxis dataKey='timestamp' tickFormatter={(time) => getTime(time)} tickMargin={15} />
