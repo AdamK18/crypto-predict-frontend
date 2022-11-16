@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Box } from '@mui/material';
-import { LineChart, XAxis, YAxis, Tooltip, CartesianGrid, Line, ResponsiveContainer, Label } from 'recharts';
+import { LineChart, XAxis, YAxis, Tooltip, CartesianGrid, Line, ResponsiveContainer, Label, Brush } from 'recharts';
 import { DefaultTooltipContent } from 'recharts/lib/component/DefaultTooltipContent';
 import { changeDataToPerformanceChartData } from 'shared/utils';
 import moment from 'moment/moment';
@@ -16,14 +16,23 @@ const getDot = ({ key, cx, cy, payload }) => {
 };
 
 const PerformanceChart = ({ data, setProfit }) => {
+  //This is to rerender the Brush component
+  const [chartKey, setChartKey] = useState(0);
   const [chartData, setchartData] = useState([]);
+  const [brushPosition, setBrushPosition] = useState({ start: 5, end: 10 });
   const getDate = (time) => moment(time).format('YYYY.MM.DD HH:mm:ss');
   const getTime = (time) => moment(time).format('HH:mm');
 
+  const length = chartData.length;
+  const { start, end } = brushPosition;
+
   useEffect(() => {
-    const changedData = changeDataToPerformanceChartData(data);
-    setchartData(changedData);
-    setProfit(changedData[changedData.length - 1].profit);
+    const performanceData = changeDataToPerformanceChartData(data);
+    setchartData(performanceData);
+    const len = performanceData.length;
+    setProfit(performanceData[len - 1].profit);
+    const range = len > 50 ? { start: len - 51, end: len - 1 } : { start: 0, end: len - 1 };
+    setBrushPosition(range);
   }, [data]);
 
   const profits = chartData.map((val) => val.profit);
@@ -33,11 +42,35 @@ const PerformanceChart = ({ data, setProfit }) => {
   const priceMax = Math.max(...prices);
   const priceMin = Math.min(...prices);
 
+  const onKeyPress = (e) => {
+    const keyCode = e.keyCode;
+    if (![87, 65, 83, 68].includes(keyCode)) return;
+    if (keyCode === 87 && end !== length - 1) {
+      setBrushPosition({ start, end: end + 1 });
+    } else if (keyCode === 65 && start !== 0) {
+      setBrushPosition({ start: start - 1, end: end - 1 });
+    } else if (keyCode === 83 && end !== 0) {
+      setBrushPosition({ start, end: end - 1 });
+    } else if (keyCode === 68 && end !== length - 1) {
+      setBrushPosition({ start: start + 1, end: end + 1 });
+    }
+    setChartKey(chartKey + 1);
+  };
+
   return (
-    <Box className={styles.container}>
+    <Box className={styles.container} onKeyDown={(e) => onKeyPress(e)}>
       <ResponsiveContainer id='chart_container' width='100%' height='100%'>
-        <LineChart id='chart' data={chartData} margin={{ top: 10, right: 30, bottom: 10, left: 20 }}>
+        <LineChart key={chartKey} id='chart' data={chartData} margin={{ top: 10, right: 30, bottom: 10, left: 20 }}>
+          <Brush
+            startIndex={start}
+            endIndex={end}
+            dataKey='timestamp'
+            tickFormatter={(time) => getTime(time)}
+            onChange={(pos) => setBrushPosition({ start: pos.startIndex, end: pos.endIndex })}
+            height={20}
+          />
           <Line
+            isAnimationActive={chartKey === 0}
             yAxisId='price'
             type='monotone'
             dataKey='price'
@@ -46,6 +79,7 @@ const PerformanceChart = ({ data, setProfit }) => {
             activeDot={(props) => getDot(props)}
           />
           <Line
+            isAnimationActive={chartKey === 0}
             yAxisId='profit'
             type='monotone'
             dataKey='profit'
@@ -54,7 +88,7 @@ const PerformanceChart = ({ data, setProfit }) => {
             activeDot={(props) => null}
           />
           <CartesianGrid stroke='#ccc' strokeDasharray='5 5' />
-          <XAxis dataKey='timestamp' tickFormatter={(time) => getTime(time)} tickMargin={15} />
+          <XAxis dataKey='timestamp' tickFormatter={(time) => getTime(time)} tickMargin={5} />
           <YAxis
             domain={[profitMin, profitMax]}
             yAxisId='profit'

@@ -41,9 +41,9 @@ const HomePage = () => {
                 <TableCell align='right'>{window_size}</TableCell>
                 <TableCell align='right'>{lookup_step}</TableCell>
                 <TableCell align='right'>
-                  <Link href={`/bot/${bot_id}`} passHref>
+                  <a href={`/bot/${bot_id}`} target='_blank'>
                     <Button variant='outlined'>See data</Button>
-                  </Link>
+                  </a>
                 </TableCell>
               </TableRow>
             );
