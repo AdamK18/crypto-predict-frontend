@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Box } from '@mui/material';
 import { LineChart, XAxis, YAxis, Tooltip, CartesianGrid, Line, ResponsiveContainer, Label, Brush } from 'recharts';
 import { DefaultTooltipContent } from 'recharts/lib/component/DefaultTooltipContent';
-import { changeDataToPerformanceChartData } from 'shared/utils';
+import { calculateAndAddProfit } from 'shared/utils';
 import moment from 'moment/moment';
 import styles from './performanceChart.module.scss';
 
@@ -15,11 +15,11 @@ const getDot = ({ key, cx, cy, payload }) => {
   );
 };
 
-const PerformanceChart = ({ data, setProfit }) => {
+const PerformanceChart = ({ data, setProfit, setPeriodProfit }) => {
   //This is to rerender the Brush component
   const [chartKey, setChartKey] = useState(0);
   const [chartData, setchartData] = useState([]);
-  const [brushPosition, setBrushPosition] = useState({ start: 5, end: 10 });
+  const [brushPosition, setBrushPosition] = useState({ start: 0, end: 0 });
   const getDate = (time) => moment(time).format('YYYY.MM.DD HH:mm:ss');
   const getTime = (time) => moment(time).format('HH:mm');
 
@@ -27,7 +27,7 @@ const PerformanceChart = ({ data, setProfit }) => {
   const { start, end } = brushPosition;
 
   useEffect(() => {
-    const performanceData = changeDataToPerformanceChartData(data);
+    const performanceData = calculateAndAddProfit(data);
     setchartData(performanceData);
     const len = performanceData.length;
     setProfit(performanceData[len - 1].profit);
@@ -35,10 +35,15 @@ const PerformanceChart = ({ data, setProfit }) => {
     setBrushPosition(range);
   }, [data]);
 
-  const profits = chartData.map((val) => val.profit);
+  useEffect(() => {
+    const periodPerformance = calculateAndAddProfit(data.slice(brushPosition.start, brushPosition.end + 1));
+    setPeriodProfit(periodPerformance[periodPerformance.length - 1].profit);
+  }, [brushPosition]);
+
+  const profits = chartData.map((val) => val.profit).slice(brushPosition.start, brushPosition.end + 1);
   const profitMax = Math.max(...profits);
   const profitMin = Math.min(...profits);
-  const prices = chartData.map((val) => val.price);
+  const prices = chartData.map((val) => val.price).slice(brushPosition.start, brushPosition.end + 1);
   const priceMax = Math.max(...prices);
   const priceMin = Math.min(...prices);
 

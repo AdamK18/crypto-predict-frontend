@@ -16,9 +16,13 @@
     margin-right: 10rem;
   }
 
+  &__limit {
+    min-width: 100px;
+  }
+
   &__selectors {
-    button {
-      margin-right: 1rem;
+    > * {
+      margin-right: 1.5rem;
     }
   }
 }

@@ -1,10 +1,4 @@
-export const sortByTimeStamp = (data) => {
-  return data.sort((a, b) => {
-    return a.timestamp - b.timestamp;
-  });
-};
-
-const calculateProfit = (data) => {
+export const calculateAndAddProfit = (data) => {
   let USDT = 0,
     BTC = 0;
   return data.map((value) => {
@@ -19,10 +13,4 @@ const calculateProfit = (data) => {
     const profit = BTC * price + USDT;
     return { ...value, profit: profit };
   });
-};
-
-export const changeDataToPerformanceChartData = (data) => {
-  const sortedData = sortByTimeStamp(data);
-  const dataWithprofit = calculateProfit(sortedData);
-  return dataWithprofit;
 };
