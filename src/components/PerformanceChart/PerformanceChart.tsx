@@ -1,10 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import useStateRef from 'react-usestateref';
 import { Box } from '@mui/material';
 import { LineChart, XAxis, YAxis, Tooltip, CartesianGrid, Line, ResponsiveContainer, Label, Brush } from 'recharts';
 import { DefaultTooltipContent } from 'recharts/lib/component/DefaultTooltipContent';
 import { calculateAndAddProfit } from 'shared/utils';
 import moment from 'moment/moment';
 import styles from './performanceChart.module.scss';
+
+const listenerAlreadyAttached = false;
 
 const getDot = ({ key, cx, cy, payload }) => {
   const color = payload.order_side === 'SELL' ? 'red' : 'green';
@@ -17,13 +20,14 @@ const getDot = ({ key, cx, cy, payload }) => {
 
 const PerformanceChart = ({ data, setProfit, setPeriodProfit }) => {
   //This is to rerender the Brush component
-  const [chartKey, setChartKey] = useState(0);
   const [chartData, setchartData] = useState([]);
-  const [brushPosition, setBrushPosition] = useState({ start: 0, end: 0 });
+  const [chartKey, setChartKey, chartKeyRef] = useStateRef(0);
+  const [brushPosition, setBrushPosition, brushPositionRef] = useStateRef({ start: 0, end: 0 });
+  const dataLength = useRef(0);
+
   const getDate = (time) => moment(time).format('YYYY.MM.DD HH:mm:ss');
   const getTime = (time) => moment(time).format('HH:mm');
 
-  const length = chartData.length;
   const { start, end } = brushPosition;
 
   useEffect(() => {
@@ -33,12 +37,51 @@ const PerformanceChart = ({ data, setProfit, setPeriodProfit }) => {
     setProfit(performanceData[len - 1].profit);
     const range = len > 50 ? { start: len - 51, end: len - 1 } : { start: 0, end: len - 1 };
     setBrushPosition(range);
+    dataLength.current = len;
   }, [data]);
 
   useEffect(() => {
     const periodPerformance = calculateAndAddProfit(data.slice(brushPosition.start, brushPosition.end + 1));
     setPeriodProfit(periodPerformance[periodPerformance.length - 1].profit);
   }, [brushPosition]);
+
+  const updateBrush = () => setChartKey(chartKeyRef.current + 1);
+
+  //Function to handle scroll event. It sets the brush position based on the direction of the scroll
+  const onScroll = (e) => {
+    const isShiftPressed = e.shiftKey;
+    const up = e.deltaY < 0;
+    let range = { ...brushPositionRef.current };
+    const len = dataLength.current;
+    const { start, end } = range;
+    if (isShiftPressed) {
+      if (up) {
+        if (end !== len - 1) {
+          range = { start: start, end: end + 1 };
+        } else if (start !== 0) {
+          range = { start: start - 1, end: end };
+        }
+      } else if (!up && start + 1 !== end) {
+        range = { start: start, end: end - 1 };
+      }
+    } else {
+      if (up && end !== len - 1) {
+        range = { start: start + 1, end: end + 1 };
+      } else if (!up && start !== 0) {
+        range = { start: start - 1, end: end - 1 };
+      }
+    }
+    setBrushPosition(range);
+    updateBrush();
+  };
+
+  //Attach scroll event
+  useEffect(() => {
+    if (listenerAlreadyAttached) {
+      return;
+    }
+    document.addEventListener('wheel', onScroll);
+  }, []);
 
   const profits = chartData.map((val) => val.profit).slice(brushPosition.start, brushPosition.end + 1);
   const profitMax = Math.max(...profits);
@@ -47,23 +90,8 @@ const PerformanceChart = ({ data, setProfit, setPeriodProfit }) => {
   const priceMax = Math.max(...prices);
   const priceMin = Math.min(...prices);
 
-  const onKeyPress = (e) => {
-    const keyCode = e.keyCode;
-    if (![87, 65, 83, 68].includes(keyCode)) return;
-    if (keyCode === 87 && end !== length - 1) {
-      setBrushPosition({ start, end: end + 1 });
-    } else if (keyCode === 65 && start !== 0) {
-      setBrushPosition({ start: start - 1, end: end - 1 });
-    } else if (keyCode === 83 && end !== 0) {
-      setBrushPosition({ start, end: end - 1 });
-    } else if (keyCode === 68 && end !== length - 1) {
-      setBrushPosition({ start: start + 1, end: end + 1 });
-    }
-    setChartKey(chartKey + 1);
-  };
-
   return (
-    <Box className={styles.container} onKeyDown={(e) => onKeyPress(e)}>
+    <Box className={styles.container}>
       <ResponsiveContainer id='chart_container' width='100%' height='100%'>
         <LineChart key={chartKey} id='chart' data={chartData} margin={{ top: 10, right: 30, bottom: 10, left: 20 }}>
           <Brush
@@ -89,8 +117,8 @@ const PerformanceChart = ({ data, setProfit, setPeriodProfit }) => {
             type='monotone'
             dataKey='profit'
             stroke='#222222'
-            dot={(props) => null}
-            activeDot={(props) => null}
+            dot={() => null}
+            activeDot={() => null}
           />
           <CartesianGrid stroke='#ccc' strokeDasharray='5 5' />
           <XAxis dataKey='timestamp' tickFormatter={(time) => getTime(time)} tickMargin={5} />
